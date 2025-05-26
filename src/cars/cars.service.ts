@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 // import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,9 +11,7 @@ export class CarsService {
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
     try {
-      const carExist = await this.carModel
-        .findOne({ plate: createCarDto.plate })
-        .exec();
+      const carExist = await this.carModel.findOne({ plate: createCarDto.plate }).exec();
       if (carExist) {
         throw new ConflictException(`Car already exist `);
       }
