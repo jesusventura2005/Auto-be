@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { UsersCreateDTO } from './dto/UsersCreateDTO';
 
 @Controller('users')
 export class UsersController {
@@ -8,7 +9,7 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() createUserDto: any) {
+  create(@Body() usersCreateDTO: UsersCreateDTO) {
     return 'This action adds a new user';
   }
 
