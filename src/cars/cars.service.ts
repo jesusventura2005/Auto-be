@@ -1,9 +1,10 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
-// import { UpdateCarDto } from './dto/update-car.dto';
+import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Car } from './entities/car.entity';
 import { Model } from 'mongoose';
+import { MaintenanceDto } from './dto/maintenance.dto';
 
 @Injectable()
 export class CarsService {
@@ -47,6 +48,25 @@ export class CarsService {
     }
   }
 
+  async update(plate: string, updateCarDto: UpdateCarDto) {
+    try {
+      const updatedCar = await this.carModel
+        .findOneAndUpdate({ plate }, { $set: updateCarDto }, { new: true, runValidators: true })
+        .exec();
+
+      if (!updatedCar) {
+        throw new NotFoundException(`Car with plate ${plate} not found`);
+      }
+
+      return updatedCar;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException(`Error updating car: ${error.message}`);
+      }
+      throw new BadRequestException('Error updating car');
+    }
+  }
+
   async remove(plate: string) {
     try {
       const car = await this.carModel.deleteOne({ plate: plate });
@@ -56,6 +76,23 @@ export class CarsService {
       return car;
     } catch (error) {
       throw new BadRequestException(error);
+    }
+  }
+
+  async addMaintenance(plate: string, maintenance: MaintenanceDto) {
+    try {
+      const car = await this.carModel.findOne({ plate });
+      if (!car) {
+        throw new NotFoundException(`Car with plate ${plate} not found`);
+      }
+
+      car.maintenance.push(maintenance);
+      return await car.save();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException(`Error adding maintenance: ${error.message}`);
+      }
+      throw new BadRequestException('Error adding maintenance');
     }
   }
 }
