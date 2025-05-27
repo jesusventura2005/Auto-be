@@ -47,13 +47,15 @@ export class CarsService {
     }
   }
 
-  // addMaintenance();
-
-  // update(plate: string, updateCarDto: UpdateCarDto) {
-  //   ;
-  // }
-
-  remove(plate: string) {
-    return `This action removes a #${plate} car`;
+  async remove(plate: string) {
+    try {
+      const car = await this.carModel.deleteOne({ plate: plate });
+      if (!car) {
+        throw new NotFoundException(`Not found car ${plate}`);
+      }
+      return car;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }
