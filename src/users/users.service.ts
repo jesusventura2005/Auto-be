@@ -43,6 +43,15 @@ export class UsersService {
     }
   }
 
+  async findOneByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.userModel.findOne({ email }).exec();
+      return user;
+    } catch (error) {
+      throw new Error(`Error fetching user with email ${email}: ${error}`);
+    }
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
       const updatedUser = await this.userModel
