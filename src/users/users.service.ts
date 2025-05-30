@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
@@ -12,7 +12,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      console.log('Creating user with DTO:', createUserDto);
       const encryptedPassword = await bcrypt.hash(createUserDto.password, 10);
       const createdUser = new this.userModel({
         ...createUserDto,
@@ -20,7 +19,7 @@ export class UsersService {
       });
       return await createdUser.save();
     } catch (error) {
-      throw new Error(`Error creating user: ${error}`);
+      throw new NotFoundException(`Error creating user: ${error}`);
     }
   }
 
@@ -28,7 +27,7 @@ export class UsersService {
     try {
       return await this.userModel.find().exec();
     } catch (error) {
-      throw new Error(`Error fetching users: ${error}`);
+      throw new NotFoundException(`Error fetching users: ${error}`);
     }
   }
 
@@ -40,7 +39,7 @@ export class UsersService {
       }
       return user;
     } catch (error) {
-      throw new Error(`Error fetching user with id ${id}: ${error}`);
+      throw new NotFoundException(`Error fetching user with id ${id}: ${error}`);
     }
   }
 
