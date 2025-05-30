@@ -13,6 +13,7 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env', '.env.local'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),

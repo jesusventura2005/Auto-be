@@ -12,6 +12,7 @@ export class UsersService {
 
   async create(createUserDto: UsersCreateDTO): Promise<User> {
     try {
+      console.log('Creating user with DTO:', createUserDto);
       const encryptedPassword = await bcrypt.hash(createUserDto.password, 10);
       const createdUser = new this.userModel({
         ...createUserDto,
