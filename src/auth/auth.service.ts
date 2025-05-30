@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/users.entity';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcryptjs';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LogInDto } from './dto/login.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.usersService.findOneByEmail(email);
+    if (!bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return user;
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async logIn(loginUserDto: LogInDto) {
+    const { password, email } = loginUserDto;
+    const user = await this.usersService.findOneByEmail(email);
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return {
+      ...user,
+      token: this.getJwtToken({ _id: user._id as string, email: user.email }),
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async register(registerDto: CreateUserDto) {
+    const newUser = await this.usersService.create(registerDto);
+    return {
+      ...newUser,
+      token: this.getJwtToken({ _id: newUser._id as string, email: newUser.email }),
+    };
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  private getJwtToken(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 }

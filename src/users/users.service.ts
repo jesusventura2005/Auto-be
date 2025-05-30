@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { UsersCreateDTO } from './dto/create-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,7 +10,7 @@ import * as bcrypt from 'bcryptjs';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: UsersCreateDTO): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     try {
       const encryptedPassword = await bcrypt.hash(createUserDto.password, 10);
       const createdUser = new this.userModel({
@@ -19,7 +19,7 @@ export class UsersService {
       });
       return await createdUser.save();
     } catch (error) {
-      throw new Error(`Error creating user: ${error}`);
+      throw new NotFoundException(`Error creating user: ${error}`);
     }
   }
 
@@ -27,7 +27,7 @@ export class UsersService {
     try {
       return await this.userModel.find().exec();
     } catch (error) {
-      throw new Error(`Error fetching users: ${error}`);
+      throw new NotFoundException(`Error fetching users: ${error}`);
     }
   }
 
@@ -39,7 +39,19 @@ export class UsersService {
       }
       return user;
     } catch (error) {
-      throw new Error(`Error fetching user with id ${id}: ${error}`);
+      throw new NotFoundException(`Error fetching user with id ${id}: ${error}`);
+    }
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.userModel.findOne({ email }).exec();
+      if (!user) {
+        throw new Error(`User with email ${email} not found`);
+      }
+      return user;
+    } catch (error) {
+      throw new Error(`Error fetching user with email ${email}: ${error}`);
     }
   }
 
