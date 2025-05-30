@@ -6,7 +6,7 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { CarsModule } from './cars/cars.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtGuard } from './auth/jwt.guard';
+import { JwtGuard } from './auth/guards/jwt.guard';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Module({
