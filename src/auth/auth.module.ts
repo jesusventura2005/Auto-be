@@ -12,7 +12,7 @@ import { PassportModule } from '@nestjs/passport';
       envFilePath: ['.env', '.env.local'],
     }),
     UsersModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

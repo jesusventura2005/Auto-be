@@ -1,8 +1,8 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Request, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LogInResponseDto } from './dto/login-response.dto';
-import { LogInDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LogInDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +11,18 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async signIn(@Body() LogInDto: LogInDto): Promise<LogInResponseDto | BadRequestException> {
-    return this.authService.logIn(LogInDto);
+  signIn(@Body() loginUserDto: LogInDto) {
+    return this.authService.logIn(loginUserDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async register(@Body() registerDto: CreateUserDto) {
+    try {
+      return await this.authService.register(registerDto);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

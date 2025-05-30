@@ -6,14 +6,11 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { CarsModule } from './cars/cars.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtGuard } from './auth/guards/jwt.guard';
-import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.local'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
@@ -27,15 +24,6 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
     UsersModule,
     CarsModule,
     AuthModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtGuard, // Assuming JwtGuard is defined in auth module
-    },
-    JwtStrategy,
   ],
 })
 export class AppModule {}
