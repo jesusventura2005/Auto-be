@@ -29,11 +29,4 @@ export class CreateUserDto {
   })
   @IsString()
   password: string;
-
-  @ApiProperty({
-    description: 'telephone number of the user',
-    example: '1234245',
-  })
-  @IsString()
-  phone: string;
 }
