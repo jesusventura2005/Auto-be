@@ -43,4 +43,11 @@ export class CreateCarDto {
   })
   @IsNotEmpty()
   plate: string;
+
+  @ApiProperty({
+    description: 'Unique serial car',
+    example: '1231dsad123d4',
+  })
+  @IsNotEmpty()
+  serial: string;
 }

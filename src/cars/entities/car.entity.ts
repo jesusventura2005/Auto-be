@@ -18,6 +18,8 @@ export class Car extends Document {
   owner: mongoose.Types.ObjectId;
   @Prop({ required: true, trim: true, unique: true })
   plate: string;
+  @Prop({ required: true })
+  serial: string;
   @Prop({ required: false })
   maintenance: [
     {
