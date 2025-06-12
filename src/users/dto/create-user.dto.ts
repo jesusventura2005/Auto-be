@@ -29,4 +29,11 @@ export class CreateUserDto {
   })
   @IsString()
   password: string;
+
+  @ApiProperty({
+    description: 'userType of the user',
+    example: 'admin',
+  })
+  @IsString()
+  userType: string;
 }
