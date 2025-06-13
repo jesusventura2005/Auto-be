@@ -5,10 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Car } from './entities/car.entity';
 import { Model } from 'mongoose';
 import { MaintenanceDto } from './dto/maintenance.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CarsService {
-  constructor(@InjectModel(Car.name) private readonly carModel: Model<Car>) {}
+  constructor(
+    @InjectModel(Car.name) private readonly carModel: Model<Car>,
+    private usersService: UsersService,
+  ) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
     try {
@@ -27,6 +31,22 @@ export class CarsService {
     try {
       const cars = await this.carModel.find().exec();
 
+      if (!cars) {
+        throw new NotFoundException('Not found cars');
+      }
+      return cars;
+    } catch (error) {
+      throw new BadRequestException(`Failed to fetch cars ${error}`);
+    }
+  }
+
+  async findById(id: string) {
+    try {
+      const user = await this.usersService.findOne(id);
+      if (!user) {
+        throw new NotFoundException('not found user');
+      }
+      const cars = await this.carModel.find({ owner: id }).exec();
       if (!cars) {
         throw new NotFoundException('Not found cars');
       }

@@ -24,6 +24,11 @@ export class CarsController {
     return this.carsService.create(createCarDto);
   }
 
+  @Get(':owner')
+  findById(@Param('owner') owner: string) {
+    return this.carsService.findById(owner);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all cars' })
   @ApiResponse({ status: 200, description: 'Return all cars.' })
