@@ -36,12 +36,12 @@ export class CarsController {
     return this.carsService.findAll();
   }
 
-  @Get(':plate')
-  @ApiOperation({ summary: 'Get a car by plate' })
+  @Get(':id/showIt')
+  @ApiOperation({ summary: 'Get a car by id' })
   @ApiResponse({ status: 200, description: 'Return the car.' })
   @ApiResponse({ status: 404, description: 'Car not found.' })
-  findOne(@Param('plate') plate: string) {
-    return this.carsService.findOne(plate);
+  findOne(@Param('id') id: string) {
+    return this.carsService.findOne(id);
   }
 
   @Patch(':plate')

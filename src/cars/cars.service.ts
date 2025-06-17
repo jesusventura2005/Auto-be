@@ -56,11 +56,11 @@ export class CarsService {
     }
   }
 
-  async findOne(plate: string) {
+  async findOne(id: string) {
     try {
-      const car = await this.carModel.findOne({ plate: plate });
+      const car = await this.carModel.findById(id).exec();
       if (!car) {
-        throw new NotFoundException(`Not found Car ${plate}`);
+        throw new NotFoundException(`Not found Car ${id}`);
       }
       return car;
     } catch (error) {
