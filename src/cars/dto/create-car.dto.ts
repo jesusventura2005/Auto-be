@@ -21,7 +21,7 @@ export class CreateCarDto {
     example: 'Corolla',
   })
   @IsNotEmpty()
-  model: string;
+  carModel: string;
 
   @ApiProperty({
     description: 'The age of the car in years',
@@ -35,7 +35,7 @@ export class CreateCarDto {
     example: '310482dsanu212',
   })
   @IsNotEmpty()
-  ownerId: string;
+  owner: string;
 
   @ApiProperty({
     description: 'The license plate of the car',
@@ -43,4 +43,11 @@ export class CreateCarDto {
   })
   @IsNotEmpty()
   plate: string;
+
+  @ApiProperty({
+    description: 'Unique serial car',
+    example: '1231dsad123d4',
+  })
+  @IsNotEmpty()
+  serial: string;
 }
