@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Date, Types } from 'mongoose';
+import { Date, Types, Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Maintenance extends Document {
@@ -15,7 +15,7 @@ export class Maintenance extends Document {
   @Prop({ required: true, trim: true })
   type: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ required: true, trim: true, type: Date })
   date: Date;
 
   @Prop({ required: true, trim: true })
