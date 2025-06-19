@@ -25,7 +25,7 @@ export class MaintenanceService {
     }
   }
 
-  async findOne(id: number): Promise<Maintenance> {
+  async findOne(id: string): Promise<Maintenance> {
     try {
       const maintenance = await this.maintenanceModel.findById(id).exec();
       if (!maintenance) {
@@ -49,7 +49,7 @@ export class MaintenanceService {
     }
   }
 
-  async update(id: number, updateMaintenanceDto: UpdateMaintenanceDto) {
+  async update(id: string, updateMaintenanceDto: UpdateMaintenanceDto) {
     try {
       const updatedMaintenance = await this.maintenanceModel
         .findByIdAndUpdate(id, updateMaintenanceDto, { new: true })
@@ -63,7 +63,7 @@ export class MaintenanceService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const deletedMaintenance = await this.maintenanceModel.findByIdAndDelete(id).exec();
       if (!deletedMaintenance) {

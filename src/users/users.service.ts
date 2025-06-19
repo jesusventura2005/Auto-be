@@ -57,6 +57,10 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
+      // If password is being updated, hash it
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
       const updatedUser = await this.userModel
         .findByIdAndUpdate(id, updateUserDto, { new: true, runValidators: true })
         .exec();

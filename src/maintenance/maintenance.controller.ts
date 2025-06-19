@@ -19,7 +19,7 @@ export class MaintenanceController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.maintenanceService.findOne(+id);
+    return this.maintenanceService.findOne(id);
   }
 
   @Get('car/:carId')
@@ -29,11 +29,11 @@ export class MaintenanceController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMaintenanceDto: UpdateMaintenanceDto) {
-    return this.maintenanceService.update(+id, updateMaintenanceDto);
+    return this.maintenanceService.update(id, updateMaintenanceDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.maintenanceService.remove(+id);
+    return this.maintenanceService.remove(id);
   }
 }
