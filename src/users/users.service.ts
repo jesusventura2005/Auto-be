@@ -55,7 +55,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       // If password is being updated, hash it
       if (updateUserDto.password) {
