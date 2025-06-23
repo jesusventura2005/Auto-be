@@ -41,7 +41,7 @@ export class MaintenanceService {
     try {
       const maintenances = await this.maintenanceModel.find({ carId }).exec();
       if (!maintenances || maintenances.length === 0) {
-        throw new NotFoundException(`No maintenances found for car with id ${carId}`);
+        return maintenances;
       }
       return maintenances;
     } catch (error) {
