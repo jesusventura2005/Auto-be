@@ -57,6 +57,11 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
+      // Validate if the user exists
+      if (await this.userModel.findOne({ email: updateUserDto.email }).exec()) {
+        throw new Error(`El correo electrónico ya está en uso`);
+      }
+
       // If password is being updated, hash it
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
