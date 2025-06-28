@@ -27,6 +27,11 @@ export class MaintenanceController {
     return this.maintenanceService.findByCarId(carId);
   }
 
+  @Get('car/:carId/latest')
+  findLatestByCarId(@Param('carId') carId: string) {
+    return this.maintenanceService.findLatestByCarId(carId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMaintenanceDto: UpdateMaintenanceDto) {
     return this.maintenanceService.update(id, updateMaintenanceDto);
