@@ -49,6 +49,23 @@ export class MaintenanceService {
     }
   }
 
+  async findLatestByCarId(carId: string): Promise<Maintenance[]> {
+    try {
+      const latestMaintenances = await this.maintenanceModel
+        .aggregate([
+          { $match: { carId: carId, completed: true } },
+          { $sort: { date: -1 } },
+          { $group: { _id: '$type', latest: { $first: '$$ROOT' } } },
+          { $replaceRoot: { newRoot: '$latest' } },
+        ])
+        .exec();
+
+      return latestMaintenances as Maintenance[];
+    } catch (error) {
+      throw new NotFoundException(`Error fetching latest maintenances for car with id ${carId}: ${error}`);
+    }
+  }
+
   async update(id: string, updateMaintenanceDto: UpdateMaintenanceDto) {
     try {
       const updatedMaintenance = await this.maintenanceModel
