@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
@@ -11,6 +11,11 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const existingUser = await this.userModel.findOne({ email: createUserDto.email }).exec();
+    if (existingUser) {
+      throw new BadRequestException(`Usuario con ${createUserDto.email} ya existe`);
+    }
+
     try {
       const encryptedPassword = await bcrypt.hash(createUserDto.password, 10);
       const createdUser = new this.userModel({
@@ -19,7 +24,7 @@ export class UsersService {
       });
       return await createdUser.save();
     } catch (error) {
-      throw new NotFoundException(`Error creating user: ${error}`);
+      throw new BadRequestException(`Error creating user: ${error}`);
     }
   }
 
