@@ -15,11 +15,16 @@ export class CarsService {
   ) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
+    const carExist = await this.carModel.findOne({ plate: createCarDto.plate }).exec();
+    const serialExist = await this.carModel.findOne({ serial: createCarDto.serial }).exec();
+    if (carExist) {
+      throw new ConflictException(`Car already exist `);
+    }
+    if (serialExist) {
+      throw new ConflictException(`Serial already exist `);
+    }
+
     try {
-      const carExist = await this.carModel.findOne({ plate: createCarDto.plate }).exec();
-      if (carExist) {
-        throw new ConflictException(`Car already exist `);
-      }
       const car = await this.carModel.create(createCarDto);
       return await car.save();
     } catch (error) {
