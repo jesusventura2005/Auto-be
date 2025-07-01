@@ -51,7 +51,14 @@ export class CarsService {
       if (!user) {
         throw new NotFoundException('not found user');
       }
-      const cars = await this.carModel.find({ owner: id }).exec();
+      const cars = await this.carModel
+        .find({ owner: id })
+        .populate({
+          path: 'maintenance',
+          match: { completed: true },
+          options: { sort: { date: -1 }, limit: 1 },
+        })
+        .exec();
       if (!cars) {
         throw new NotFoundException('Not found cars');
       }
