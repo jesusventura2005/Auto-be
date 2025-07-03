@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 
 @Schema({
@@ -20,14 +20,8 @@ export class Car extends Document {
   plate: string;
   @Prop({ required: true })
   serial: string;
-  @Prop({ required: false })
-  maintenance: [
-    {
-      type: string;
-      description: string;
-      date: Date;
-    },
-  ];
+  @Prop({ type: Types.ObjectId, ref: 'Maintenance', default: [] })
+  maintenance: Types.ObjectId[];
 }
 
 export const carSchema = SchemaFactory.createForClass(Car);

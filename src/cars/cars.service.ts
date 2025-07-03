@@ -4,7 +4,6 @@ import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Car } from './entities/car.entity';
 import { Model } from 'mongoose';
-import { MaintenanceDto } from './dto/maintenance.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -111,20 +110,20 @@ export class CarsService {
     }
   }
 
-  async addMaintenance(plate: string, maintenance: MaintenanceDto) {
-    try {
-      const car = await this.carModel.findOne({ plate });
-      if (!car) {
-        throw new NotFoundException(`Car with plate ${plate} not found`);
-      }
+  // async addMaintenance(plate: string, maintenance: MaintenanceDto) {
+  //   try {
+  //     const car = await this.carModel.findOne({ plate });
+  //     if (!car) {
+  //       throw new NotFoundException(`Car with plate ${plate} not found`);
+  //     }
 
-      car.maintenance.push(maintenance);
-      return await car.save();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException(`Error adding maintenance: ${error.message}`);
-      }
-      throw new BadRequestException('Error adding maintenance');
-    }
-  }
+  //     car.maintenance.push(maintenance);
+  //     return await car.save();
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       throw new BadRequestException(`Error adding maintenance: ${error.message}`);
+  //     }
+  //     throw new BadRequestException('Error adding maintenance');
+  //   }
+  // }
 }
