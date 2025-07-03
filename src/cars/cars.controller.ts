@@ -3,7 +3,6 @@ import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { MaintenanceDto } from './dto/maintenance.dto';
 
 //algunos end-points deberian ser con el id, ademas debemos proteger los endpoint para que cualquier persona
 // no pueda estar editandolos solo el dueño del carro
@@ -65,17 +64,5 @@ export class CarsController {
   @ApiResponse({ status: 404, description: 'Car not found.' })
   remove(@Param('plate') plate: string) {
     return this.carsService.remove(plate);
-  }
-
-  @Post(':plate/maintenance')
-  @ApiOperation({ summary: 'Add maintenance to a car' })
-  @ApiResponse({
-    status: 200,
-    description: 'The maintenance has been successfully added.',
-  })
-  @ApiResponse({ status: 404, description: 'Car not found.' })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  addMaintenance(@Param('plate') plate: string, @Body() maintenance: MaintenanceDto) {
-    return this.carsService.addMaintenance(plate, maintenance);
   }
 }
