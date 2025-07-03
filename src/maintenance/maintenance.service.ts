@@ -4,26 +4,14 @@ import { UpdateMaintenanceDto } from './dto/update-maintenance.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Maintenance } from './entities/maintenance.entity';
-import { Car } from 'src/cars/entities/car.entity';
 
 @Injectable()
 export class MaintenanceService {
-  constructor(
-    @InjectModel('Maintenance') private maintenanceModel: Model<Maintenance>,
-    @InjectModel('Car') private carModel: Model<Car>,
-  ) {}
+  constructor(@InjectModel('Maintenance') private maintenanceModel: Model<Maintenance>) {}
 
   async create(createMaintenanceDto: CreateMaintenanceDto): Promise<Maintenance> {
     try {
       const createdMaintenance = await this.maintenanceModel.create(createMaintenanceDto);
-
-      await this.carModel
-        .findByIdAndUpdate(
-          createMaintenanceDto.carId,
-          { $push: { maintenance: createdMaintenance._id } },
-          { new: true },
-        )
-        .exec();
       return createdMaintenance;
     } catch (error) {
       throw new Error(`Error creating maintenance: ${error}`);
