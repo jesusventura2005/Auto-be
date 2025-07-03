@@ -11,7 +11,6 @@ import { Car, carSchema } from 'src/cars/entities/car.entity';
       { name: 'Maintenance', schema: MaintenanceSchema },
       { name: Car.name, schema: carSchema },
     ]),
-    MaintenanceModule,
   ],
   controllers: [MaintenanceController],
   providers: [MaintenanceService],
