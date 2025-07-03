@@ -13,7 +13,7 @@ export class Car extends Document {
   @Prop({ required: true, trim: true })
   carModel: string;
   @Prop({ required: true, trim: true })
-  age: number;
+  year: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, trim: true })
   owner: mongoose.Types.ObjectId;
   @Prop({ required: true, trim: true, unique: true })
