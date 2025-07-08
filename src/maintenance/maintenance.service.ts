@@ -50,9 +50,19 @@ export class MaintenanceService {
     }
   }
 
-  async findByCarId(carId: string): Promise<Maintenance[]> {
+  async findByCarId(carId: string, options?: { pending?: boolean; limit?: number }): Promise<Maintenance[]> {
     try {
-      const maintenances = await this.maintenanceModel.find({ carId }).exec();
+      const query: { carId: string; completed?: boolean } = { carId };
+      if (options?.pending !== undefined) {
+        query.completed = !options.pending; // true for completed, false for pending
+      }
+
+      let maintenanceQuery = this.maintenanceModel.find(query);
+
+      if (options?.limit) {
+        maintenanceQuery = maintenanceQuery.limit(options.limit);
+      }
+      const maintenances = await maintenanceQuery.exec();
       if (!maintenances || maintenances.length === 0) {
         return maintenances;
       }

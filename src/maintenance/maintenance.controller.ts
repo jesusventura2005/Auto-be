@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MaintenanceService } from './maintenance.service';
 import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
 import { UpdateMaintenanceDto } from './dto/update-maintenance.dto';
@@ -23,8 +23,11 @@ export class MaintenanceController {
   }
 
   @Get('car/:carId')
-  findByCarId(@Param('carId') carId: string) {
-    return this.maintenanceService.findByCarId(carId);
+  findByCarId(@Param('carId') carId: string, @Query('pending') pending?: boolean, @Query('limit') limit?: string) {
+    return this.maintenanceService.findByCarId(carId, {
+      pending: pending === true,
+      limit: limit ? parseInt(limit, 10) : undefined,
+    });
   }
 
   @Get('car/:carId/latest')
