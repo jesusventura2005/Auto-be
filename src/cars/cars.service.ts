@@ -71,11 +71,7 @@ export class CarsService {
     try {
       const car = await this.carModel
         .findById(id)
-        .populate({
-          path: 'maintenance',
-          match: { completed: false },
-          options: { sort: { date: -1 }, limit: 3 },
-        })
+        .populate({ path: 'maintenance', match: { completed: true }, options: { sort: { date: -1 }, limit: 1 } })
         .exec();
       if (!car) {
         throw new NotFoundException(`Not found Car ${id}`);
@@ -116,21 +112,4 @@ export class CarsService {
       throw new BadRequestException(error);
     }
   }
-
-  // async addMaintenance(plate: string, maintenance: MaintenanceDto) {
-  //   try {
-  //     const car = await this.carModel.findOne({ plate });
-  //     if (!car) {
-  //       throw new NotFoundException(`Car with plate ${plate} not found`);
-  //     }
-
-  //     car.maintenance.push(maintenance);
-  //     return await car.save();
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       throw new BadRequestException(`Error adding maintenance: ${error.message}`);
-  //     }
-  //     throw new BadRequestException('Error adding maintenance');
-  //   }
-  // }
 }
