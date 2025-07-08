@@ -23,9 +23,9 @@ export class MaintenanceController {
   }
 
   @Get('car/:carId')
-  findByCarId(@Param('carId') carId: string, @Query('completed') completed?: boolean, @Query('limit') limit?: string) {
+  findByCarId(@Param('carId') carId: string, @Query('completed') completed?: string, @Query('limit') limit?: string) {
     return this.maintenanceService.findByCarId(carId, {
-      completed: completed === true,
+      completed: completed !== undefined ? completed === 'true' : undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
     });
   }
